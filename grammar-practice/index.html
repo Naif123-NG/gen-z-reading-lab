@@ -32,7 +32,9 @@ button{font:inherit;cursor:pointer}
 .word{border-style:dashed}
 .opt:active,.word:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
 .opt[aria-pressed=true],.word[aria-pressed=true]{background:var(--sel);border-color:var(--sel-line);border-style:solid;box-shadow:0 4px 0 var(--sel-line)}
-.locked .opt,.locked .word{cursor:default}
+.locked .opt,.locked .word,.done .opt,.done .word{cursor:default}
+.fb .ar{font-size:19px;color:inherit;margin-top:4px}
+.live{font:800 20px 'Baloo 2';font-variant-numeric:tabular-nums}
 .correct-mark{background:var(--ok-bg)!important;border-color:var(--ok)!important;color:var(--ok)!important;box-shadow:0 4px 0 var(--ok)!important;border-style:solid!important}
 .wrong-mark{background:var(--bad-bg)!important;border-color:var(--bad)!important;color:var(--bad)!important;box-shadow:0 4px 0 var(--bad)!important;border-style:solid!important}
 .fb{border-radius:14px;padding:12px 16px;font-weight:700}
@@ -67,7 +69,7 @@ h1,.stem{text-wrap:balance}.score{font-variant-numeric:tabular-nums}
 <header class="card hero">
   <span class="pill" id="setLabel">Evolve 2 · Grammar practice</span>
   <h1 id="title">Practice</h1>
-  <p class="ar">اكتب اسمك، ثم أجب عن كل الأسئلة واضغط Check.</p>
+  <p class="ar">اكتب اسمك، ثم اضغط على الإجابة لترى فوراً إن كانت صحيحة، وفي النهاية اضغط «أرسل نتيجتي».</p>
 </header>
 
 <main id="student" style="display:flex;flex-direction:column;gap:22px">
@@ -83,14 +85,14 @@ h1,.stem{text-wrap:balance}.score{font-variant-numeric:tabular-nums}
     <div id="listB" style="display:flex;flex-direction:column;gap:16px"></div>
   </section>
   <section class="card">
-    <div class="row"><button class="btn" id="check" type="button">Check my answers · تحقق</button><p class="msg" id="smsg" style="flex:1 1 220px">Answer every question, then press Check.</p></div>
+    <div class="row"><button class="btn" id="check" type="button">Send my score · أرسل نتيجتي</button><p class="msg" id="smsg" style="flex:1 1 220px">Click an answer: you see right or wrong at once. · اضغط على الإجابة لترى النتيجة فوراً.</p></div>
   </section>
   <section class="card hero hidden" id="result">
     <span class="pill">Your result</span>
     <p class="score" id="scoreTxt"></p>
     <p class="msg" id="saveTxt"></p>
-    <p>Look at the red feedback under each question.</p>
-    <p class="ar">راجع الملاحظات الحمراء تحت كل سؤال.</p>
+    <p>Read the red feedback under any question you missed.</p>
+    <p class="ar">راجع الملاحظات الحمراء تحت الأسئلة التي أخطأت فيها.</p>
   </section>
 </main>
 
@@ -118,37 +120,37 @@ var POINTS={"1.1":"be + my, his, her","1.2":"Possession: ’s, mine, whose","2.1
 var SETS={
  1:{title:"Units 1–2",
   A:[
-   {t:"1.1",q:"My sister is a doctor. ___ hospital is in Jeddah.",o:["His","Her","Their"],a:1,w:"Her: the sister is a woman."},
-   {t:"1.1",q:"Ahmed and Ali ___ from Dammam.",o:["is","am","are"],a:2,w:"are: two people = they."},
-   {t:"1.1",q:"Sara ___ at home. She’s at work.",o:["isn’t","aren’t","not"],a:0,w:"isn’t: Sara = she → is not."},
-   {t:"1.2",q:"Whose laptop is this? It’s ___.",o:["Omar","Omar’s","Omars’"],a:1,w:"Omar’s: name + ’s shows the owner."},
-   {t:"1.2",q:"These books aren’t ___. They’re Sara’s.",o:["my","mine","me"],a:1,w:"mine: no noun after it."},
-   {t:"2.1",q:"We ___ to the beach on Fridays.",o:["goes","go","going"],a:1,w:"go: we + base verb."},
-   {t:"2.1",q:"___ your brother work in Riyadh?",o:["Do","Is","Does"],a:2,w:"Does: your brother = he."},
-   {t:"2.2",q:"I don’t want these sunglasses. I want ___ in the window.",o:["that one","those ones","this one"],a:1,w:"those ones: far away and plural."}
+   {t:"1.1",q:"My sister is a doctor. ___ hospital is in Jeddah.",o:["His","Her","Their"],a:1,w:"Her: the sister is a woman.",wa:"الأخت امرأة ← her"},
+   {t:"1.1",q:"Ahmed and Ali ___ from Dammam.",o:["is","am","are"],a:2,w:"are: two people = they.",wa:"أحمد وعلي جمع ← are"},
+   {t:"1.1",q:"Sara ___ at home. She’s at work.",o:["isn’t","aren’t","not"],a:0,w:"isn’t: Sara = she → is not.",wa:"سارة مفرد ← is not = isn’t"},
+   {t:"1.2",q:"Whose laptop is this? It’s ___.",o:["Omar","Omar’s","Omars’"],a:1,w:"Omar’s: name + ’s shows the owner.",wa:"نضيف ’s للاسم لبيان المالك ← Omar’s"},
+   {t:"1.2",q:"These books aren’t ___. They’re Sara’s.",o:["my","mine","me"],a:1,w:"mine: no noun after it.",wa:"لا يوجد اسم بعدها ← mine"},
+   {t:"2.1",q:"We ___ to the beach on Fridays.",o:["goes","go","going"],a:1,w:"go: we + base verb.",wa:"we + الفعل بدون s ← go"},
+   {t:"2.1",q:"___ your brother work in Riyadh?",o:["Do","Is","Does"],a:2,w:"Does: your brother = he.",wa:"أخوك = he ← Does"},
+   {t:"2.2",q:"I don’t want these sunglasses. I want ___ in the window.",o:["that one","those ones","this one"],a:1,w:"those ones: far away and plural.",wa:"بعيد وجمع ← those ones"}
   ],
   B:[
-   {t:"1.1",s:["Noura","and","his","mother","are","teachers."],x:2,f:"his → her"},
-   {t:"1.2",s:["Who’s","phone","is","on","the","table?"],x:0,f:"Who’s → Whose"},
-   {t:"2.1",s:["My","friend","don’t","like","football."],x:2,f:"don’t → doesn’t"},
-   {t:"2.2",s:["Do","you","like","this","hats?"],x:3,f:"this → these (hats is plural)"}
+   {t:"1.1",s:["Noura","and","his","mother","are","teachers."],x:2,f:"his → her",wa:"نورة امرأة ← her"},
+   {t:"1.2",s:["Who’s","phone","is","on","the","table?"],x:0,f:"Who’s → Whose",wa:"للسؤال عن المالك نستخدم Whose"},
+   {t:"2.1",s:["My","friend","don’t","like","football."],x:2,f:"don’t → doesn’t",wa:"my friend = he ← doesn’t"},
+   {t:"2.2",s:["Do","you","like","this","hats?"],x:3,f:"this → these (hats is plural)",wa:"hats جمع ← these"}
   ]},
  2:{title:"Units 3–4",
   A:[
-   {t:"3.1",q:"Shh! The baby ___.",o:["sleeps","is sleeping","sleeping"],a:1,w:"is sleeping: it is happening now."},
-   {t:"3.1",q:"We ___ TV. We’re doing our homework.",o:["aren’t watching","don’t watching","isn’t watching"],a:0,w:"we → are not + -ing."},
-   {t:"3.1",q:"___ they waiting for the bus?",o:["Do","Are","Is"],a:1,w:"Are: they + be + -ing."},
-   {t:"3.2",q:"I ___ the answer to question 5.",o:["know","am knowing","knowing"],a:0,w:"know: a state verb, no -ing."},
-   {t:"3.2",q:"He usually ___ tea, but today he ___ coffee.",o:["drinks / is drinking","is drinking / drinks","drink / drinks"],a:0,w:"usually = habit; today = now."},
-   {t:"4.1",q:"We ___ my uncle next weekend. It’s all planned.",o:["visit","are visiting","visiting"],a:1,w:"are visiting: a future plan."},
-   {t:"4.2",q:"Where are my keys? I can’t find ___.",o:["it","them","they"],a:1,w:"them: keys is plural, after the verb."},
-   {t:"4.2",q:"This present is for Sara. Please give it to ___.",o:["she","her","hers"],a:1,w:"her: after the preposition to."}
+   {t:"3.1",q:"Shh! The baby ___.",o:["sleeps","is sleeping","sleeping"],a:1,w:"is sleeping: it is happening now.",wa:"يحدث الآن ← is sleeping"},
+   {t:"3.1",q:"We ___ TV. We’re doing our homework.",o:["aren’t watching","don’t watching","isn’t watching"],a:0,w:"we → are not + -ing.",wa:"we ← aren’t + الفعل مع ing"},
+   {t:"3.1",q:"___ they waiting for the bus?",o:["Do","Are","Is"],a:1,w:"Are: they + be + -ing.",wa:"they ← Are + الفعل مع ing"},
+   {t:"3.2",q:"I ___ the answer to question 5.",o:["know","am knowing","knowing"],a:0,w:"know: a state verb, no -ing.",wa:"know فعل حالة ← بدون ing"},
+   {t:"3.2",q:"He usually ___ tea, but today he ___ coffee.",o:["drinks / is drinking","is drinking / drinks","drink / drinks"],a:0,w:"usually = habit; today = now.",wa:"usually عادة، و today الآن"},
+   {t:"4.1",q:"We ___ my uncle next weekend. It’s all planned.",o:["visit","are visiting","visiting"],a:1,w:"are visiting: a future plan.",wa:"خطة مستقبلية ← are visiting"},
+   {t:"4.2",q:"Where are my keys? I can’t find ___.",o:["it","them","they"],a:1,w:"them: keys is plural, after the verb.",wa:"keys جمع وبعد الفعل ← them"},
+   {t:"4.2",q:"This present is for Sara. Please give it to ___.",o:["she","her","hers"],a:1,w:"her: after the preposition to.",wa:"بعد حرف الجر to ← her"}
   ],
   B:[
-   {t:"3.1",s:["Look!","They","are","run","in","the","park."],x:3,f:"run → running"},
-   {t:"3.2",s:["She","is going","to","work","by","bus","every day."],x:1,f:"is going → goes (every day = habit)"},
-   {t:"4.1",s:["What","do you do","tomorrow evening?","Any","plans?"],x:1,f:"do you do → are you doing"},
-   {t:"4.2",s:["Please","call","I","after","the","class."],x:2,f:"I → me"}
+   {t:"3.1",s:["Look!","They","are","run","in","the","park."],x:3,f:"run → running",wa:"بعد are نحتاج الفعل مع ing ← running"},
+   {t:"3.2",s:["She","is going","to","work","by","bus","every day."],x:1,f:"is going → goes (every day = habit)",wa:"every day عادة ← goes"},
+   {t:"4.1",s:["What","do you do","tomorrow evening?","Any","plans?"],x:1,f:"do you do → are you doing",wa:"سؤال عن خطة ← are you doing"},
+   {t:"4.2",s:["Please","call","I","after","the","class."],x:2,f:"I → me",wa:"بعد الفعل call ← me"}
   ]}
 };
 var params=new URLSearchParams(location.search);
@@ -169,7 +171,7 @@ B.A.forEach(function(it,i){
  var c=el("div","card");head(c,i+1,it.t);c.appendChild(el("p","stem",it.q));
  var o=el("div","opts");bA[i]=[];
  it.o.forEach(function(txt,j){var b=el("button","opt",String.fromCharCode(65+j)+"  "+txt);b.type="button";b.setAttribute("aria-pressed","false");
-  b.addEventListener("click",function(){if(locked)return;keepStill(function(){ansA[i]=j;bA[i].forEach(function(x,k){x.setAttribute("aria-pressed",k===j?"true":"false");});});});
+  b.addEventListener("click",function(){answer("A",i,j);});
   bA[i].push(b);o.appendChild(b);});
  c.appendChild(o);fbA[i]=el("p","fb hidden");c.appendChild(fbA[i]);document.getElementById("listA").appendChild(c);
 });
@@ -177,28 +179,48 @@ B.B.forEach(function(it,i){
  var c=el("div","card");head(c,B.A.length+i+1,it.t);
  var w=el("div","words");bB[i]=[];
  it.s.forEach(function(txt,j){var b=el("button","word",txt);b.type="button";b.setAttribute("aria-pressed","false");
-  b.addEventListener("click",function(){if(locked)return;keepStill(function(){ansB[i]=j;bB[i].forEach(function(x,k){x.setAttribute("aria-pressed",k===j?"true":"false");});});});
+  b.addEventListener("click",function(){answer("B",i,j);});
   bB[i].push(b);w.appendChild(b);});
  c.appendChild(w);fbB[i]=el("p","fb hidden");c.appendChild(fbB[i]);document.getElementById("listB").appendChild(c);
 });
 
+function fbSet(el,ok,en,ar){el.replaceChildren();var a=document.createElement("p");a.textContent=en;var b=document.createElement("p");b.className="ar";b.textContent=ar;el.appendChild(a);el.appendChild(b);el.className="fb "+(ok?"ok":"no");}
+function liveScore(){
+ var done=0,score=0;
+ B.A.forEach(function(it,i){if(ansA[i]>=0){done++;if(ansA[i]===it.a)score++;}});
+ B.B.forEach(function(it,i){if(ansB[i]>=0){done++;if(ansB[i]===it.x)score++;}});
+ var total=B.A.length+B.B.length,msg=document.getElementById("smsg");
+ msg.className="msg live";msg.textContent="Answered "+done+" / "+total+" · Correct "+score+" · أجبت عن "+done+" من "+total;
+ return {done:done,score:score,total:total};
+}
+function answer(part,i,j){
+ if(locked)return;
+ var ans=part==="A"?ansA:ansB; if(ans[i]>=0)return;
+ keepStill(function(){
+  ans[i]=j;
+  var it=part==="A"?B.A[i]:B.B[i],btns=part==="A"?bA[i]:bB[i],fb=part==="A"?fbA[i]:fbB[i],right=part==="A"?it.a:it.x,ok=j===right;
+  btns[right].classList.add("correct-mark"); if(!ok)btns[j].classList.add("wrong-mark");
+  btns[0].parentNode.parentNode.classList.add("done");
+  btns.forEach(function(x){x.setAttribute("aria-disabled","true");});
+  if(part==="A")fbSet(fb,ok,ok?"✓ Correct! "+it.w:"✗ Not quite. The answer is "+String.fromCharCode(65+right)+". "+it.w,ok?"✓ صحيح! "+it.wa:"✗ ليست صحيحة. "+it.wa);
+  else fbSet(fb,ok,ok?"✓ Correct! "+it.f:"✗ Not quite. The mistake is: "+it.f,ok?"✓ صحيح! "+it.wa:"✗ ليست صحيحة. "+it.wa);
+  liveScore();
+ });
+}
 function check(){
  var nm=document.getElementById("sname").value.trim().replace(/\s+/g," "),msg=document.getElementById("smsg");
- if(nm.length<2){msg.textContent="Please type your full name at the top.";msg.className="msg err";document.getElementById("sname").focus({preventScroll:true});return;}
- var miss=ansA.filter(function(a){return a<0;}).length+ansB.filter(function(a){return a<0;}).length;
- if(miss){msg.textContent="You have "+miss+" question"+(miss>1?"s":"")+" with no answer.";msg.className="msg err";return;}
+ if(nm.length<2){msg.textContent="Please type your full name at the top. · اكتب اسمك الكامل في الأعلى.";msg.className="msg err";document.getElementById("sname").focus({preventScroll:true});return;}
+ var r=liveScore(),miss=r.total-r.done;
+ if(miss){msg.textContent="You have "+miss+" question"+(miss>1?"s":"")+" with no answer. · بقي "+miss+" بدون إجابة.";msg.className="msg err";return;}
  locked=true;document.getElementById("student").classList.add("locked");
- var score=0,detail=[];
- B.A.forEach(function(it,i){var ok=ansA[i]===it.a;if(ok)score++;bA[i][it.a].classList.add("correct-mark");if(!ok)bA[i][ansA[i]].classList.add("wrong-mark");
-  fbA[i].textContent=(ok?"Correct! ":"Not quite. ")+it.w;fbA[i].className="fb "+(ok?"ok":"no");detail.push({n:i+1,t:it.t,c:ok?1:0,s:ansA[i]});});
- B.B.forEach(function(it,i){var ok=ansB[i]===it.x;if(ok)score++;bB[i][it.x].classList.add("correct-mark");if(!ok)bB[i][ansB[i]].classList.add("wrong-mark");
-  fbB[i].textContent=(ok?"Correct! ":"Not quite. The mistake is: ")+it.f;fbB[i].className="fb "+(ok?"ok":"no");detail.push({n:B.A.length+i+1,t:it.t,c:ok?1:0,s:ansB[i]});});
- var total=B.A.length+B.B.length;
- document.getElementById("check").disabled=true;msg.textContent="Checked.";msg.className="msg";
- document.getElementById("scoreTxt").textContent=score+" / "+total;document.getElementById("result").classList.remove("hidden");
+ var detail=[];
+ B.A.forEach(function(it,i){detail.push({n:i+1,t:it.t,c:ansA[i]===it.a?1:0,s:ansA[i]});});
+ B.B.forEach(function(it,i){detail.push({n:B.A.length+i+1,t:it.t,c:ansB[i]===it.x?1:0,s:ansB[i]});});
+ document.getElementById("check").disabled=true;
+ document.getElementById("scoreTxt").textContent=r.score+" / "+r.total;document.getElementById("result").classList.remove("hidden");
  var st=document.getElementById("saveTxt");st.textContent="Sending your result to your teacher…";store("gw-name",nm);
- rpc("gw_save",{p_block:setNo,p_sid:nm.slice(0,40),p_name:nm,p_section:"",p_answers:detail,p_score:score,p_total:total})
-  .then(function(j){st.textContent=j&&j.ok?"✓ Your teacher received your result.":"Could not send your result. Tell your teacher your score.";st.className=j&&j.ok?"msg":"msg err";})
+ rpc("gw_save",{p_block:setNo,p_sid:nm.slice(0,40),p_name:nm,p_section:"",p_answers:detail,p_score:r.score,p_total:r.total})
+  .then(function(j){st.textContent=j&&j.ok?"✓ Your teacher received your result. · وصلت نتيجتك إلى المعلم.":"Could not send your result. Tell your teacher your score.";st.className=j&&j.ok?"msg":"msg err";})
   .catch(function(){st.textContent="Could not send your result (internet problem). Tell your teacher your score.";st.className="msg err";});
 }
 
