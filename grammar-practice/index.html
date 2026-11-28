@@ -9,6 +9,8 @@
 :root{--bg:#EEF3F8;--ink:#1C2B3A;--ink2:#1E3A5F;--muted:#4B5B6B;--card:#FFFFFF;--line:#C9D6E3;--brand:#0B3D91;--u:#E11D48;--u-bg:#FFE4E6;
 --ok:#15803D;--ok-bg:#DCFCE7;--bad:#DC2626;--bad-bg:#FEE2E2;--sel:#FEF3C7;--sel-line:#D97706;overflow-anchor:none;color-scheme:light}
 body.s2{--u:#1D4ED8;--u-bg:#DBEAFE}
+body.s3{--u:#0F766E;--u-bg:#CCFBF1}
+body.s4{--u:#C2410C;--u-bg:#FFEDD5}
 *{box-sizing:border-box}
 body{margin:0;background-color:var(--bg);background-image:radial-gradient(circle at 0 0,var(--u-bg) 0,transparent 40%),radial-gradient(rgba(28,43,58,.12) 1.2px,transparent 1.4px);background-size:auto,24px 24px;color:var(--ink);font:18px/1.55 Nunito,"Segoe UI",system-ui,sans-serif}
 .wrap{max-width:820px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:22px}
@@ -116,7 +118,7 @@ h1,.stem{text-wrap:balance}.score{font-variant-numeric:tabular-nums}
 "use strict";
 var SB="https://rhcjdcwvndbhrbwatgoy.supabase.co/rest/v1/rpc/";
 var KEY="sb_publishable_3r-IMNfRh4sdDMYZzDQc4g_wBJppHtG";
-var POINTS={"1.1":"be + my, his, her","1.2":"Possession: ’s, mine, whose","2.1":"Simple present","2.2":"this one / those ones","3.1":"Present continuous","3.2":"Simple present or continuous","4.1":"Plans: I’m meeting…","4.2":"Object pronouns"};
+var POINTS={"1.1":"be + my, his, her","1.2":"Possession: ’s, mine, whose","2.1":"Simple present","2.2":"this one / those ones","3.1":"Present continuous","3.2":"Simple present or continuous","4.1":"Plans: I’m meeting…","4.2":"Object pronouns","5.1":"Simple past","5.2":"Past negative and questions","6.1":"be going to","6.2":"Determiners","7.1":"Quantifiers","7.2":"Verb patterns","8.1":"if and when","8.2":"to and for"};
 var SETS={
  1:{title:"Units 1–2",
   A:[
@@ -151,12 +153,46 @@ var SETS={
    {t:"3.2",s:["She","is going","to","work","by","bus","every day."],x:1,f:"is going → goes (every day = habit)",wa:"every day عادة ← goes"},
    {t:"4.1",s:["What","do you do","tomorrow evening?","Any","plans?"],x:1,f:"do you do → are you doing",wa:"سؤال عن خطة ← are you doing"},
    {t:"4.2",s:["Please","call","I","after","the","class."],x:2,f:"I → me",wa:"بعد الفعل call ← me"}
+  ]},
+ 3:{title:"Units 5–6",
+  A:[
+   {t:"5.1",q:"We ___ at home all day yesterday.",o:["was","were","are"],a:1,w:"were: we → were.",wa:"we ← were"},
+   {t:"5.1",q:"She ___ to Abha last summer.",o:["goes","went","go"],a:1,w:"went: the past of go.",wa:"ماضي go ← went"},
+   {t:"5.1",q:"I ___ for my exam last night.",o:["studyed","studied","study"],a:1,w:"studied: y → ied.",wa:"y تتحول إلى ied ← studied"},
+   {t:"5.2",q:"___ you see the match yesterday?",o:["Do","Did","Were"],a:1,w:"Did: a question about the past.",wa:"سؤال في الماضي ← Did"},
+   {t:"5.2",q:"He didn’t ___ the cat this morning.",o:["fed","feed","feeding"],a:1,w:"feed: base verb after didn’t.",wa:"بعد didn’t ← المصدر feed"},
+   {t:"6.1",q:"I’m ___ buy a new laptop next month.",o:["going","going to","go to"],a:1,w:"going to + base verb.",wa:"am going to + الفعل"},
+   {t:"6.1",q:"___ they going to travel this weekend?",o:["Do","Are","Is"],a:1,w:"Are: they → are.",wa:"they ← Are"},
+   {t:"6.2",q:"___ of the printers are on sale. (0%)",o:["No","None","Some"],a:1,w:"None of the = 0%.",wa:"قبل of the نستخدم none"}
+  ],
+  B:[
+   {t:"5.1",s:["We","goed","to the park","yesterday."],x:1,f:"goed → went",wa:"go فعل شاذ ← went"},
+   {t:"5.2",s:["Did","she","called","you?"],x:2,f:"called → call (after Did)",wa:"بعد Did ← المصدر call"},
+   {t:"6.1",s:["She","going to","visit","her aunt."],x:1,f:"going to → is going to",wa:"نحتاج is قبل going to"},
+   {t:"6.2",s:["Most of","students","like","football."],x:0,f:"Most of → Most (or Most of the)",wa:"Most of تحتاج the، أو نقول Most students"}
+  ]},
+ 4:{title:"Units 7–8",
+  A:[
+   {t:"7.1",q:"How ___ water do you drink every day?",o:["many","much","few"],a:1,w:"water is non-count → much.",wa:"water غير معدود ← much"},
+   {t:"7.1",q:"I need ___ eggs for the cake.",o:["a little","a few","much"],a:1,w:"eggs are countable → a few.",wa:"eggs معدودة ← a few"},
+   {t:"7.1",q:"There’s too ___ salt in the soup!",o:["many","much","a few"],a:1,w:"salt is non-count → too much.",wa:"salt غير معدود ← too much"},
+   {t:"7.2",q:"I enjoy ___ with my friends.",o:["to cook","cooking","cook"],a:1,w:"enjoy + -ing.",wa:"enjoy + ing"},
+   {t:"7.2",q:"We want ___ a healthy breakfast.",o:["eating","to eat","eat"],a:1,w:"want + to + verb.",wa:"want + to + الفعل"},
+   {t:"8.1",q:"If I’m tired, I ___ to bed early.",o:["go","will going","went"],a:0,w:"simple present in both parts.",wa:"المضارع البسيط في الجملتين ← go"},
+   {t:"8.1",q:"When water gets very cold, it ___ into ice.",o:["turn","turns","turning"],a:1,w:"it → turns.",wa:"it ← turns"},
+   {t:"8.2",q:"I went to the pharmacy ___ some medicine.",o:["to","for","because"],a:1,w:"medicine is a noun → for.",wa:"medicine اسم ← for"}
+  ],
+  B:[
+   {t:"7.1",s:["How","much","apples","do you want?"],x:1,f:"much → many (apples are countable)",wa:"apples معدودة ← many"},
+   {t:"7.2",s:["She","can’t stand","to wait","in line."],x:2,f:"to wait → waiting",wa:"can’t stand + ing"},
+   {t:"8.1",s:["If","it","will rain,","we stay home."],x:2,f:"will rain → rains",wa:"لا نستخدم will بعد if هنا"},
+   {t:"8.2",s:["He","went","to the bank","for","get money."],x:3,f:"for → to (+ verb get)",wa:"قبل الفعل نستخدم to"}
   ]}
 };
 var params=new URLSearchParams(location.search);
 var setNo=parseInt(params.get("s")||"1",10); if(!SETS[setNo]) setNo=1;
 var B=SETS[setNo], isTeacher=location.hash==="#teacher";
-if(setNo===2)document.body.classList.add("s2");
+if(setNo>1)document.body.classList.add("s"+setNo);
 document.getElementById("setLabel").textContent="Evolve 2 · Grammar practice · "+B.title;
 document.getElementById("title").textContent=isTeacher?"Results · "+B.title:"Practice · "+B.title;
 
