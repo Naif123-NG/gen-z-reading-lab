@@ -11,6 +11,8 @@
 body.s2{--u:#1D4ED8;--u-bg:#DBEAFE}
 body.s3{--u:#0F766E;--u-bg:#CCFBF1}
 body.s4{--u:#C2410C;--u-bg:#FFEDD5}
+body.s5{--u:#E11D48;--u-bg:#FFE4E6}
+body.s6{--u:#1D4ED8;--u-bg:#DBEAFE}
 *{box-sizing:border-box}
 body{margin:0;background-color:var(--bg);background-image:radial-gradient(circle at 0 0,var(--u-bg) 0,transparent 40%),radial-gradient(rgba(28,43,58,.12) 1.2px,transparent 1.4px);background-size:auto,24px 24px;color:var(--ink);font:18px/1.55 Nunito,"Segoe UI",system-ui,sans-serif}
 .wrap{max-width:820px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:22px}
@@ -118,7 +120,7 @@ h1,.stem{text-wrap:balance}.score{font-variant-numeric:tabular-nums}
 "use strict";
 var SB="https://rhcjdcwvndbhrbwatgoy.supabase.co/rest/v1/rpc/";
 var KEY="sb_publishable_3r-IMNfRh4sdDMYZzDQc4g_wBJppHtG";
-var POINTS={"1.1":"be + my, his, her","1.2":"Possession: ’s, mine, whose","2.1":"Simple present","2.2":"this one / those ones","3.1":"Present continuous","3.2":"Simple present or continuous","4.1":"Plans: I’m meeting…","4.2":"Object pronouns","5.1":"Simple past","5.2":"Past negative and questions","6.1":"be going to","6.2":"Determiners","7.1":"Quantifiers","7.2":"Verb patterns","8.1":"if and when","8.2":"to and for"};
+var POINTS={"1.1":"be + my, his, her","1.2":"Possession: ’s, mine, whose","2.1":"Simple present","2.2":"this one / those ones","3.1":"Present continuous","3.2":"Simple present or continuous","4.1":"Plans: I’m meeting…","4.2":"Object pronouns","5.1":"Simple past","5.2":"Past negative and questions","6.1":"be going to","6.2":"Determiners","7.1":"Quantifiers","7.2":"Verb patterns","8.1":"if and when","8.2":"to and for","9.1":"Comparatives","9.2":"Superlatives","10.1":"have to","10.2":"will, may, might","11.1":"Present perfect","11.2":"Present perfect or past","12.1":"be like","12.2":"who, which, that"};
 var SETS={
  1:{title:"Units 1–2",
   A:[
@@ -187,6 +189,40 @@ var SETS={
    {t:"7.2",s:["She","can’t stand","to wait","in line."],x:2,f:"to wait → waiting",wa:"can’t stand + ing"},
    {t:"8.1",s:["If","it","will rain,","we stay home."],x:2,f:"will rain → rains",wa:"لا نستخدم will بعد if هنا"},
    {t:"8.2",s:["He","went","to the bank","for","get money."],x:3,f:"for → to (+ verb get)",wa:"قبل الفعل نستخدم to"}
+  ]},
+ 5:{title:"Units 9–10",
+  A:[
+   {t:"9.1",q:"Jeddah is ___ than Abha in summer.",o:["hot","hotter","hottest"],a:1,w:"hotter: two places.",wa:"مقارنة بين مكانين ← hotter"},
+   {t:"9.1",q:"This laptop is ___ than my old one.",o:["more good","better","best"],a:1,w:"good → better.",wa:"good شاذة ← better"},
+   {t:"9.2",q:"Burj Khalifa is ___ building in the world.",o:["the tallest","taller","the most tall"],a:0,w:"the + tall + est.",wa:"الأول في المجموعة ← the tallest"},
+   {t:"9.2",q:"She is ___ student in our class.",o:["the most intelligent","the intelligentest","more intelligent"],a:0,w:"long adjective → the most.",wa:"صفة طويلة ← the most"},
+   {t:"10.1",q:"Students ___ wear a uniform at my school.",o:["has to","have to","having to"],a:1,w:"students = they → have to.",wa:"students جمع ← have to"},
+   {t:"10.1",q:"You ___ bring food. Lunch is free.",o:["have to","don’t have to","has to"],a:1,w:"not necessary → don’t have to.",wa:"غير ضروري ← don’t have to"},
+   {t:"10.2",q:"Look at those clouds! It ___ rain soon.",o:["might","mights","might to"],a:0,w:"might + base verb.",wa:"might + المصدر"},
+   {t:"10.2",q:"I’m sure you ___ pass the exam.",o:["won’t","will","might not"],a:1,w:"sure → will.",wa:"متأكد ← will"}
+  ],
+  B:[
+   {t:"9.1",s:["Riyadh","is","more big","than Dammam."],x:2,f:"more big → bigger",wa:"big صفة قصيرة ← bigger"},
+   {t:"9.2",s:["It’s","the most cheapest","phone here."],x:1,f:"the most cheapest → the cheapest",wa:"لا نجمع most مع est"},
+   {t:"10.1",s:["He","have to","get up","at 6."],x:1,f:"have to → has to",wa:"he ← has to"},
+   {t:"10.2",s:["We","will goes","to Abha","next year."],x:1,f:"will goes → will go",wa:"بعد will المصدر"}
+  ]},
+ 6:{title:"Units 11–12",
+  A:[
+   {t:"11.1",q:"___ you ever been to Egypt?",o:["Did","Have","Has"],a:1,w:"you → Have.",wa:"you ← Have"},
+   {t:"11.1",q:"He has ___ a famous actor.",o:["meet","met","meeting"],a:1,w:"past participle → met.",wa:"التصريف الثالث ← met"},
+   {t:"11.2",q:"I ___ my keys yesterday.",o:["have lost","lost","have losing"],a:1,w:"yesterday → simple past.",wa:"yesterday ← الماضي البسيط"},
+   {t:"11.2",q:"She ___ never tried sushi.",o:["has","did","have"],a:0,w:"she + has + never.",wa:"she ← has"},
+   {t:"12.1",q:"What ___ the weather like yesterday?",o:["is","was","did"],a:1,w:"yesterday → was.",wa:"الماضي ← was"},
+   {t:"12.1",q:"What’s your new phone like? – ___",o:["I like it.","It’s fast and light.","Yes, it is."],a:1,w:"Describe it with adjectives.",wa:"نجيب بالوصف"},
+   {t:"12.2",q:"He’s the man ___ fixed my car.",o:["which","who","what"],a:1,w:"a person → who.",wa:"شخص ← who"},
+   {t:"12.2",q:"I lost the bag ___ my mother gave me.",o:["who","which","where"],a:1,w:"a thing → which.",wa:"شيء ← which"}
+  ],
+  B:[
+   {t:"11.1",s:["Have","you","ever","ate","camel meat?"],x:3,f:"ate → eaten",wa:"التصريف الثالث ← eaten"},
+   {t:"11.2",s:["We","have visited","Jeddah","last month."],x:1,f:"have visited → visited",wa:"last month ← الماضي البسيط"},
+   {t:"12.1",s:["What","is like","your school?"],x:1,f:"is like your school → is your school like",wa:"like في آخر السؤال"},
+   {t:"12.2",s:["I have","a cat","who","sleeps all day."],x:2,f:"who → which / that",wa:"للحيوان which أو that"}
   ]}
 };
 var params=new URLSearchParams(location.search);
